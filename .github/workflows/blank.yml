@@ -2,16 +2,13 @@ name: Test PowerShell on Ubuntu
 on: push
 
 jobs:
-  pester-test:
-    name: Pester test
+  install-dependencies:
+    name: Install dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Perform a Pester test from the command-line
-        shell: pwsh
-        run: Test-Path resultsfile.log | Should -Be $true
-      - name: Perform a Pester test from the Tests.ps1 file
+      - uses: actions/checkout@v3
+      - name: Install from PSGallery
         shell: pwsh
         run: |
-          Invoke-Pester Unit.Tests.ps1 -Passthru
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module SqlServer, PSScriptAnalyzer
